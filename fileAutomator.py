@@ -6,11 +6,12 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 ## FILL IN BELOW
-source_dir = ## folder to track
+source_dir = ## folder to track # example for Windows "C:\\Users\\Name\\Downloads"
 dest_dir_sfx = ## folder for images
 dest_dir_music = ## etc
 dest_dir_video = ## etc
 dest_dir_image = ## etc
+dest_dir_pdf = #example "C:\\Users\\Name\\Desktop\\Pdfs"
 
 ## ADD MORE TYPES
 
@@ -48,9 +49,12 @@ class MoverHandler(FileSystemEventHandler):
                 elif name.endswith('.mov') or name.endswith('.mp4'):
                     dest = dest_dir_video
                     move(dest, entry, name)
-                elif name.endswith('.jpg') or name.endswith('.jpeg') or name.endswith('.png'):
+                elif name.endswith('.jpg') or name.endswith('.jpeg') or name.endswith('.png') or or name.endswith('.PNG'): # Some images png are in uppercase
                     dest = dest_dir_image
                     move(dest, entry, name)                   
+                elif name.endswith('.pdf'): # Add pdfs
+                    dest = dest_dir_pdf
+                    move(dest, entry, name)
 
 ## NO NEED TO CHANGE BELOW CODE
 if __name__ == "__main__":
