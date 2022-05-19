@@ -49,7 +49,7 @@ class MoverHandler(FileSystemEventHandler):
                 elif name.endswith('.mov') or name.endswith('.mp4'):
                     dest = dest_dir_video
                     move(dest, entry, name)
-                elif name.endswith('.jpg') or name.endswith('.jpeg') or name.endswith('.png') or or name.endswith('.PNG'): # Some images png are in uppercase
+                elif name.endswith('.jpg') or name.endswith('.jpeg') or name.endswith('.png') or name.endswith('.PNG'): # Some images png are in uppercase
                     dest = dest_dir_image
                     move(dest, entry, name)                   
                 elif name.endswith('.pdf'): # Add pdfs
