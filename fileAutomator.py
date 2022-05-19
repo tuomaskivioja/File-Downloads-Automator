@@ -50,7 +50,7 @@ def move_file(dest, entry, name):
 
 class MoverHandler(FileSystemEventHandler):
     # ? THIS FUNCTION WILL RUN WHENEVER THERE IS A CHANGE IN "source_dir"
-    # ? .upper is for avoiding on missing files with uppercase extensions
+    # ? .upper is for not missing out on files with uppercase extensions
     def on_modified(self, event):
         with scandir(source_dir) as entries:
             for entry in entries:
@@ -60,7 +60,7 @@ class MoverHandler(FileSystemEventHandler):
                 self.check_image_files(entry, name)
                 self.check_document_files(entry, name)
 
-    def check_audio_files(self, entry, name):  # * Moves all Audio Files
+    def check_audio_files(self, entry, name):  # * Checks all Audio Files
         for audio_extension in audio_extensions:
             if name.endswith(audio_extension) or name.endswith(audio_extension.upper()):
                 if entry.stat().st_size < 10_000_000 or "SFX" in name:  # ? 10Megabytes
@@ -70,19 +70,19 @@ class MoverHandler(FileSystemEventHandler):
                 move_file(dest, entry, name)
                 logging.info(f"Moved audio file: {name}")
 
-    def check_video_files(self, entry, name):  # * Moves all Video Files
+    def check_video_files(self, entry, name):  # * Checks all Video Files
         for video_extension in video_extensions:
             if name.endswith(video_extension) or name.endswith(video_extension.upper()):
                 move_file(dest_dir_video, entry, name)
                 logging.info(f"Moved video file: {name}")
 
-    def check_image_files(self, entry, name):  # * Moves all Image Files
+    def check_image_files(self, entry, name):  # * Checks all Image Files
         for image_extension in image_extensions:
             if name.endswith(image_extension) or name.endswith(image_extension.upper()):
                 move_file(dest_dir_image, entry, name)
                 logging.info(f"Moved image file: {name}")
 
-    def check_document_files(self, entry, name):  # * Moves all Documents Files
+    def check_document_files(self, entry, name):  # * Checks all Document Files
         for documents_extension in document_extensions:
             if name.endswith(documents_extension) or name.endswith(documents_extension.upper()):
                 move_file(dest_dir_documents, entry, name)
@@ -104,5 +104,4 @@ if __name__ == "__main__":
             sleep(10)
     except KeyboardInterrupt:
         observer.stop()
-
     observer.join()
