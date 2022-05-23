@@ -1,5 +1,5 @@
 from os import scandir, rename
-from os.path import splitext, exists
+from os.path import splitext, exists, join
 from shutil import move
 from time import sleep
 
@@ -30,21 +30,23 @@ document_extensions = [".doc", ".docx", ".odt",
                        ".pdf", ".xls", ".xlsx", ".ppt", ".pptx"]
 
 
-def make_unique(path):
-    filename, extension = splitext(path)
+def make_unique(dest, name):
+    filename, extension = splitext(name)
     counter = 1
     # * IF FILE EXISTS, ADDS NUMBER TO THE END OF THE FILENAME
-    while exists(path):
-        path = f"{filename} ({counter}){extension}"
+    while exists(f"{dest}/{name}"):
+        name = f"{filename}({str(counter)}){extension}"
         counter += 1
 
-    return path
+    return name
 
 
 def move_file(dest, entry, name):
     if exists(f"{dest}/{name}"):
-        unique_name = make_unique(name)
-        rename(entry, unique_name)
+        unique_name = make_unique(dest, name)
+        oldName = join(dest, name)
+        newName = join(dest, unique_name)
+        rename(oldName, newName)
     move(entry, dest)
 
 
