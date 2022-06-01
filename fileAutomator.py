@@ -10,12 +10,13 @@ from watchdog.events import FileSystemEventHandler
 
 # ! FILL IN BELOW
 # ? folder to track e.g. Windows: "C:\\Users\\UserName\\Downloads"
-source_dir = ""
-dest_dir_sfx = ""
-dest_dir_music = ""
-dest_dir_video = ""
-dest_dir_image = ""
-dest_dir_documents = ""
+source_dir = "C:\\Users\\kaush\\Downloads"
+dest_dir_sfx = "C:\\Users\\kaush\\Downloads"
+dest_dir_music = "C:\\Users\\kaush\\Music"
+dest_dir_video = "C:\\Users\\kaush\\Videos"
+dest_dir_image = "C:\\Users\kaush\\Pictures"
+dest_dir_documents = "C:\\Users\\kaush\\Documents"
+dest_dir_apps="C:\\Users\\kaush\Desktop\\apps"
 
 # ? supported image types
 image_extensions = [".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png", ".gif", ".webp", ".tiff", ".tif", ".psd", ".raw", ".arw", ".cr2", ".nrw",
@@ -24,11 +25,11 @@ image_extensions = [".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png", ".
 video_extensions = [".webm", ".mpg", ".mp2", ".mpeg", ".mpe", ".mpv", ".ogg",
                     ".mp4", ".mp4v", ".m4v", ".avi", ".wmv", ".mov", ".qt", ".flv", ".swf", ".avchd"]
 # ? supported Audio types
-audio_extensions = [".m4a", ".flac", "mp3", ".wav", ".wma", ".aac"]
+audio_extensions = [".m4a", ".flac", ".mp3", ".wav", ".wma", ".aac"]
 # ? supported Document types
 document_extensions = [".doc", ".docx", ".odt",
                        ".pdf", ".xls", ".xlsx", ".ppt", ".pptx"]
-
+app_extensions=[".exe"]
 
 def make_unique(path):
     filename, extension = splitext(path)
@@ -87,6 +88,12 @@ class MoverHandler(FileSystemEventHandler):
             if name.endswith(documents_extension) or name.endswith(documents_extension.upper()):
                 move_file(dest_dir_documents, entry, name)
                 logging.info(f"Moved document file: {name}")
+    def check_app_files(self, entry, name):  
+        for app_extension in app_extensions:
+            if name.endswith(app_extension) or name.endswith(app_extension.upper()):
+                move_file(dest_dir_apps, entry, name)
+                logging.info(f"Moved document file: {name}")
+         
 
 
 # ! NO NEED TO CHANGE BELOW CODE
