@@ -18,6 +18,7 @@ from watchdog.events import FileSystemEventHandler
 
 # ! FILL IN BELOW
 # ? folder to track e.g. Windows: "C:\\Users\\UserName\\Downloads"
+#Change the directory for all of these
 source_dir = "C:\\Users\\kaush\\Downloads"
 dest_dir_sfx = "C:\\Users\\kaush\\Downloads"
 dest_dir_music = "C:\\Users\\kaush\\Music"
@@ -105,12 +106,12 @@ class MoverHandler(FileSystemEventHandler):
         for app_extension in app_extensions:
             if name.endswith(app_extension) or name.endswith(app_extension.upper()):
                 move_file(dest_dir_apps, entry, name)
-                logging.info(f"Moved document file: {name}")
+                logging.info(f"Moved app file: {name}")
          
     def check_zip_files(self, entry, name):  
          if name.endswith(".zip") or name.endswith(".zip".upper()):
             move_file(dest_dir_zips, entry, name)
-            logging.info(f"Moved document file: {name}")
+            logging.info(f"Moved zip file: {name}")
     def remove_dupes(self):
         Tk().withdraw()
     path=askdirectory(title="Select a folder")
