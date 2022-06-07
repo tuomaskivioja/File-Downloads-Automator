@@ -1,12 +1,20 @@
 from os import scandir, rename
+import os
+from enum import unique
+from pathlib import Path
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
 from os.path import splitext, exists
 from shutil import move
 from time import sleep
-
+from pathlib import Path
 import logging
-
+import zipfile
+import hashlib
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+
+
 
 # ! FILL IN BELOW
 # ? folder to track e.g. Windows: "C:\\Users\\UserName\\Downloads"
@@ -17,7 +25,7 @@ dest_dir_video = "C:\\Users\\kaush\\Videos"
 dest_dir_image = "C:\\Users\kaush\\Pictures"
 dest_dir_documents = "C:\\Users\\kaush\\Documents"
 dest_dir_apps="C:\\Users\\kaush\Desktop\\apps"
-
+dest_dir_zips= "C:\\Users\\kaush\\Desktop\\zips"
 # ? supported image types
 image_extensions = [".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png", ".gif", ".webp", ".tiff", ".tif", ".psd", ".raw", ".arw", ".cr2", ".nrw",
                     ".k25", ".bmp", ".dib", ".heif", ".heic", ".ind", ".indd", ".indt", ".jp2", ".j2k", ".jpf", ".jpf", ".jpx", ".jpm", ".mj2", ".svg", ".svgz", ".ai", ".eps", ".ico"]
@@ -29,7 +37,7 @@ audio_extensions = [".m4a", ".flac", ".mp3", ".wav", ".wma", ".aac"]
 # ? supported Document types
 document_extensions = [".doc", ".docx", ".odt",
                        ".pdf", ".xls", ".xlsx", ".ppt", ".pptx"]
-app_extensions=[".exe"]
+app_extensions=[".exe",".jar",".dmg"]
 
 def make_unique(path):
     filename, extension = splitext(path)
@@ -47,6 +55,9 @@ def move_file(dest, entry, name):
         unique_name = make_unique(name)
         rename(entry, unique_name)
     move(entry, dest)
+def remove_stem(dir,name):
+    s=(f"{dir}/{name}")
+    return Path(s)
 
 
 class MoverHandler(FileSystemEventHandler):
@@ -60,7 +71,9 @@ class MoverHandler(FileSystemEventHandler):
                 self.check_video_files(entry, name)
                 self.check_image_files(entry, name)
                 self.check_document_files(entry, name)
-
+                self.check_app_files(entry,name)
+                self.check_zip_files(entry,name)
+                self.remove_dupes()
     def check_audio_files(self, entry, name):  # * Checks all Audio Files
         for audio_extension in audio_extensions:
             if name.endswith(audio_extension) or name.endswith(audio_extension.upper()):
@@ -94,7 +107,26 @@ class MoverHandler(FileSystemEventHandler):
                 move_file(dest_dir_apps, entry, name)
                 logging.info(f"Moved document file: {name}")
          
-
+    def check_zip_files(self, entry, name):  
+         if name.endswith(".zip") or name.endswith(".zip".upper()):
+            move_file(dest_dir_zips, entry, name)
+            logging.info(f"Moved document file: {name}")
+    def remove_dupes(self):
+        Tk().withdraw()
+    path=askdirectory(title="Select a folder")
+    walker=os.walk(path)
+    uniqueFiles=dict()
+    for folder,sub_folder,files in walker:
+            for file in files:
+                filepath=os.path.join(folder,file)
+        
+                filehash=hashlib.md5(open(filepath,"rb").read()).hexdigest()
+                if filehash in uniqueFiles:
+                    os.remove(filepath)
+                    print(f"{filepath} has been deleted")
+                else:
+                    uniqueFiles[filehash]=path
+            
 
 # ! NO NEED TO CHANGE BELOW CODE
 if __name__ == "__main__":
