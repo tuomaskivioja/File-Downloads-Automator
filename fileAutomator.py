@@ -1,4 +1,4 @@
-from os import scandir, rename
+from os import scandir, rename, getenv
 from os.path import splitext, exists, join
 from shutil import move
 from time import sleep
@@ -7,6 +7,32 @@ import logging
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+
+
+import smtplib
+from email.message import EmailMessage
+from dotenv import load_dotenv
+import ssl
+load_dotenv()
+
+# notification Email
+MY_EMAIL = getenv('MY_EMAIL')
+MY_PASSWORD = getenv('MY_PASSWORD')
+
+
+def send_email(info):
+    body = info
+    em = EmailMessage()
+    em["From"] = MY_EMAIL
+    em["TO"] = MY_EMAIL
+    em["Subject"] = info
+    em.set_content(body)
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(MY_EMAIL, MY_PASSWORD)
+        smtp.sendmail(MY_EMAIL, MY_EMAIL, em.as_string())
+
 
 # ! FILL IN BELOW
 # ? folder to track e.g. Windows: "C:\\Users\\UserName\\Downloads"
@@ -77,12 +103,14 @@ class MoverHandler(FileSystemEventHandler):
             if name.endswith(video_extension) or name.endswith(video_extension.upper()):
                 move_file(dest_dir_video, entry, name)
                 logging.info(f"Moved video file: {name}")
+                send_email(f"New VIDEO file in folder {name}")
 
     def check_image_files(self, entry, name):  # * Checks all Image Files
         for image_extension in image_extensions:
             if name.endswith(image_extension) or name.endswith(image_extension.upper()):
                 move_file(dest_dir_image, entry, name)
                 logging.info(f"Moved image file: {name}")
+                send_email(f"New image file in folder: {name}")
 
     def check_document_files(self, entry, name):  # * Checks all Document Files
         for documents_extension in document_extensions:
