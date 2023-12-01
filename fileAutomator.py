@@ -1,5 +1,5 @@
-from os import scandir, rename
-from os.path import splitext, exists, join
+from os import scandir, rename, makedirs
+from os.path import splitext, exists, join, expanduser
 from shutil import move
 from time import sleep
 
@@ -8,14 +8,28 @@ import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+# directories
+home_directory = expanduser("~")
 # ! FILL IN BELOW
 # ? folder to track e.g. Windows: "C:\\Users\\UserName\\Downloads"
-source_dir = ""
-dest_dir_sfx = ""
-dest_dir_music = ""
-dest_dir_video = ""
-dest_dir_image = ""
-dest_dir_documents = ""
+# replace the default values to fit your needs
+source_dir = join(home_directory, "Downloads")
+dest_dir_sfx = join(source_dir, "SFX")
+dest_dir_music = join(source_dir, "Music")
+dest_dir_video = join(source_dir, "Videos")
+dest_dir_image = join(source_dir, "Images")
+dest_dir_documents = join(source_dir, "Documents")
+
+# checking if directory exists, if not creating it
+def check_and_create(folder):
+    if not exists(folder):
+        makedirs(folder)
+
+check_and_create(dest_dir_sfx)
+check_and_create(dest_dir_music)
+check_and_create(dest_dir_video)
+check_and_create(dest_dir_image)
+check_and_create(dest_dir_documents)
 
 # ? supported image types
 image_extensions = [".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png", ".gif", ".webp", ".tiff", ".tif", ".psd", ".raw", ".arw", ".cr2", ".nrw",
