@@ -14,11 +14,11 @@ home_directory = expanduser("~")
 # ? folder to track e.g. Windows: "C:\\Users\\UserName\\Downloads"
 # replace the default values to fit your needs
 source_dir = join(home_directory, "Downloads")
-dest_dir_sfx = join(download_dir, "SFX")
-dest_dir_music = join(download_dir, "Music")
-dest_dir_video = join(download_dir, "Videos")
-dest_dir_image = join(download_dir, "Images")
-dest_dir_documents = join(download_dir, "Documents")
+dest_dir_sfx = join(source_dir, "SFX")
+dest_dir_music = join(source_dir, "Music")
+dest_dir_video = join(source_dir, "Videos")
+dest_dir_image = join(source_dir, "Images")
+dest_dir_documents = join(source_dir, "Documents")
 
 # checking if directory exists, if not creating it
 def check_and_create(folder):
